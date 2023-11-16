@@ -1,0 +1,90 @@
+    ------- PYTHON CODE------------
+# Use a library like SQLAlchemy to connect to MySQL
+from sqlalchemy import create_engine, select
+from pymongo import MongoClient
+
+# Connect to MySQL database
+mysql_engine = create_engine('mysql://user:password@localhost/source_db')
+mysql_connection = mysql_engine.connect()
+
+# Connect to MongoDB
+mongo_client = MongoClient('mongodb://localhost:27017')
+mongo_db = mongo_client['destination_db']
+
+# Fetch data from MySQL
+mysql_data = mysql_connection.execute(select('*').select_from('source_table')).fetchall()
+
+# Migrate data to MongoDB
+for row in mysql_data:
+    mongo_db['destination_collection'].insert_one(dict(row))
+
+# Close connections
+mysql_connection.close()
+mongo_client.close()
+ 
+
+       ------JSX------
+       // Use create-react-app or your preferred setup for React
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+function ReportingDashboard() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from MongoDB
+    axios.get('http://localhost:your_api_port/data')
+      .then(response => setData(response.data))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  return (
+    <div>
+      {/* Display data and implement filtering */}
+      {data.map(item => (
+        <div key={item._id}>{/* Display data fields */}</div>
+      ))}
+    </div>
+  );
+}
+
+export default ReportingDashboard;
+  
+
+
+         ----------JAVASCRIPT--------
+
+         const express = require('express');
+const mongoose = require('mongoose');
+
+const app = express();
+const port = 3000;
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/your_database', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Define a mongoose schema and model for your data
+
+// Create
+app.post('/data', (req, res) => {
+  // Implement data creation logic
+});
+
+// Read
+app.get('/data', (req, res) => {
+  // Implement data retrieval logic
+});
+
+// Update
+app.put('/data/:id', (req, res) => {
+  // Implement data update logic
+});
+
+// Delete
+app.delete('/data/:id', (req, res) => {
+  // Implement data deletion logic
+});
+
+app.listen(port, () => {
+  console.log(Server is running at http://localhost:${port});
+});
